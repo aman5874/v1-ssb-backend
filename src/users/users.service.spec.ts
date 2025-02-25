@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { DatabaseService } from '../database/database.service';
+import { DatabaseService } from '../database/users/user.database.service';
 import {
   UnauthorizedException,
   ForbiddenException,

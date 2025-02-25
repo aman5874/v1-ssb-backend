@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FastifyRequest } from 'fastify';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { DatabaseService } from '../database/database.service';
+import { DatabaseService } from '../database/users/user.database.service';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -90,10 +90,12 @@ describe('UsersController', () => {
 
       const expectedResponse = {
         user: {
-          id: 1,
+          userId: '12345',
           email: 'test@example.com',
           name: 'Test User',
           role: Role.USER,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         token: 'jwt-token',
       };
@@ -115,10 +117,11 @@ describe('UsersController', () => {
 
       const expectedResponse = {
         user: {
-          id: 1,
+          userId: '12345',
           email: 'test@example.com',
           name: 'Test User',
           role: Role.USER,
+          loginAt: new Date(),
         },
         token: 'jwt-token',
       };

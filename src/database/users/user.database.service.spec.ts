@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DatabaseService } from './database.service';
+import { DatabaseService } from './user.database.service';
 import { Role } from '@prisma/client';
 
 describe('DatabaseService', () => {
