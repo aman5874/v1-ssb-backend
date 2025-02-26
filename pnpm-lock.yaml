@@ -89,6 +89,9 @@ importers:
       fluent-ffmpeg:
         specifier: ^2.1.3
         version: 2.1.3
+      form-data:
+        specifier: ^4.0.2
+        version: 4.0.2
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
