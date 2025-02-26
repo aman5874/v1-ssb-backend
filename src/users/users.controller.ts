@@ -14,7 +14,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { Request } from 'express';
 import { FastifyRequest } from 'fastify';
 import { Role } from '@prisma/client';
 

@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import {
   TranscribeOptionsDto,
   UploadResponseDto,
-  TranscriptionResponseDto,
-} from './dto/transcribe.dto';
+} from './dto/request/transcribe.dto';
+import { TranscriptionResponseDto } from './dto/response/transcription-response.dto';
 import axios from 'axios';
 import { FastifyRequest } from 'fastify';
 
