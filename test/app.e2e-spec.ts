@@ -5,7 +5,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './../src/app.module';
 import { Role } from '@prisma/client';
-import { DatabaseService } from '../src/database/database.service';
+import { DatabaseService } from '../src/database/users/user.database.service';
 
 describe('AppController (e2e)', () => {
   let app: NestFastifyApplication;

@@ -2,18 +2,30 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './database/users/user.database.module';
 import { UsersModule } from './users/users.module';
 import { ApiModule } from './api/api.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
+import { MulterModule } from '@nestjs/platform-express';
+import { TranscribeModule } from './transcribe/transcribe.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
     DatabaseModule,
     UsersModule,
     ApiModule,
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: 'localhost',
+      port: 6379,
+    }),
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    TranscribeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

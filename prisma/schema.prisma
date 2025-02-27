@@ -9,23 +9,33 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL_PRISMA")
+  provider = "postgresql"
+  url      = env("DATABASE_URL_PRISMA")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  userId    String   @unique @default(dbgenerated("floor(random() * 90000 + 10000)::text"))
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  userId    String    @unique @default(dbgenerated("floor(random() * 90000 + 10000)::text"))
+  email     String    @unique
   name      String
   password  String
-  role      Role     @default(USER)
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  loginAt   DateTime?
+
+  @@index([email])
+  @@index([role])
+}
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  loginAt   DateTime
 }
 
 enum Role {
   USER
   ADMIN
 }
+
+
