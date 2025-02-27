@@ -8,6 +8,9 @@ import {
   Delete,
   UseGuards,
   Req,
+  HttpCode,
+  HttpStatus,
+  Inject,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,6 +19,9 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { FastifyRequest } from 'fastify';
 import { Role } from '@prisma/client';
+import { RegisterResponse, LoginResponse } from './interfaces/user.interface';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 interface RequestWithUser extends FastifyRequest {
   user: {
@@ -26,7 +32,10 @@ interface RequestWithUser extends FastifyRequest {
 
 @Controller('user') // handles requests to /users
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   /*
   GET /user (admin only)
@@ -50,12 +59,13 @@ export class UsersController {
   }
 
   @Post('register')
-  register(@Body() createUserDto: CreateUserDto) {
+  register(@Body() createUserDto: CreateUserDto): Promise<RegisterResponse> {
     return this.usersService.register(createUserDto);
   }
 
   @Post('login')
-  login(@Body() loginUserDto: LoginUserDto) {
+  @HttpCode(HttpStatus.OK)
+  login(@Body() loginUserDto: LoginUserDto): Promise<LoginResponse> {
     return this.usersService.login(loginUserDto);
   }
 
@@ -78,5 +88,32 @@ export class UsersController {
   @Post('initialize')
   initializeUsers() {
     return this.usersService.initializeUsers();
+  }
+
+  @Get('test-redis-connection')
+  async testRedisConnection() {
+    try {
+      const testKey = 'test:connection';
+      const testValue = { test: 'data', timestamp: new Date().toISOString() };
+
+      // Try to set data
+      await this.cacheManager.set(testKey, testValue, 300);
+
+      // Try to get data back
+      const retrieved = await this.cacheManager.get(testKey);
+
+      return {
+        success: true,
+        stored: testValue,
+        retrieved,
+        match: JSON.stringify(testValue) === JSON.stringify(retrieved),
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        stack: error.stack,
+      };
+    }
   }
 }

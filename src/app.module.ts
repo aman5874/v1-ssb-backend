@@ -9,6 +9,9 @@ import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 import { MulterModule } from '@nestjs/platform-express';
 import { TranscribeModule } from './transcribe/transcribe.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RedisCacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -26,6 +29,14 @@ import { TranscribeModule } from './transcribe/transcribe.module';
       dest: './uploads',
     }),
     TranscribeModule,
+    NotificationsModule,
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+      maxListeners: 10,
+      verboseMemoryLeak: true,
+    }),
+    RedisCacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],
