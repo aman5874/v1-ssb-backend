@@ -2,8 +2,7 @@
 /dist
 /node_modules
 /build
-/scripts
-/certs
+
 
 # Logs
 logs
