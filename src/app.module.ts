@@ -9,6 +9,11 @@ import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 import { MulterModule } from '@nestjs/platform-express';
 import { TranscribeModule } from './transcribe/transcribe.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RedisCacheModule } from './cache/cache.module';
+import { WebhookController } from './webhook/webhook.controller';
+import { WebhookService } from './webhook/webhook.service';
 
 @Module({
   imports: [
@@ -19,15 +24,25 @@ import { TranscribeModule } from './transcribe/transcribe.module';
     CacheModule.register({
       isGlobal: true,
       store: redisStore,
-      host: 'localhost',
-      port: 6379,
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
+      tls: true,
     }),
     MulterModule.register({
       dest: './uploads',
     }),
     TranscribeModule,
+    NotificationsModule,
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+      maxListeners: 10,
+      verboseMemoryLeak: true,
+    }),
+    RedisCacheModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, WebhookController],
+  providers: [AppService, WebhookService],
 })
 export class AppModule {}

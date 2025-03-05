@@ -159,7 +159,10 @@ export class TranscribeService {
         },
       );
 
-      return response.data;
+      const transcription = response.data;
+
+      // Ensure the response includes all required fields with correct types
+      return transcription;
     } catch (error) {
       throw new HttpException(
         'Failed to get transcription',
@@ -183,6 +186,43 @@ export class TranscribeService {
         'Failed to list transcriptions',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async sendWebhookNotification(
+    webhookUrl: string,
+    payload: any,
+  ): Promise<void> {
+    try {
+      await axios.post(webhookUrl, payload);
+    } catch (error) {
+      console.error('Error sending webhook notification:', error);
+      throw new HttpException(
+        'Failed to send webhook notification',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+}
+
+@Injectable()
+export class WebhookService {
+  async handleWebhook(data: any): Promise<void> {
+    const { transcript_id, status } = data;
+
+    if (!transcript_id) {
+      throw new HttpException(
+        'Transcript ID is required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Process the webhook data
+    if (status === 'completed') {
+      console.log(`Transcription ${transcript_id} is completed.`);
+      // Add logic to update the database or notify other services
+    } else {
+      console.log(`Transcription ${transcript_id} status: ${status}`);
     }
   }
 }

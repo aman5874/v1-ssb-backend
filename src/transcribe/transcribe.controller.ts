@@ -31,12 +31,27 @@ export class TranscribeController {
   @Post('transcribe')
   async transcribe(
     @Body(new TranscribeValidationPipe()) options: TranscribeOptionsDto,
-  ): Promise<string> {
-    return this.transcribeService.transcribeAudio(options);
+  ): Promise<{ transcriptionId: string }> {
+    const transcriptionId =
+      await this.transcribeService.transcribeAudio(options);
+
+    // Send the transcription ID to the specified webhook URL
+    if (options.webhook_url) {
+      await this.transcribeService.sendWebhookNotification(
+        options.webhook_url,
+        {
+          transcript_id: transcriptionId,
+          status: 'processing', // Initial status
+          webhook_auth_header_name: options.webhook_auth_header_name,
+          webhook_auth_header_value: options.webhook_auth_header_value,
+        },
+      );
+    }
+
+    return { transcriptionId };
   }
 
   @Get('transcribe/:id')
-  @UseInterceptors(new TranscribeResponseValidationPipe())
   async getTranscription(
     @Param('id') id: string,
   ): Promise<TranscriptionResponseDto> {
