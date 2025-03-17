@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TranscribeController } from './transcribe.controller';
-import { TranscribeService } from './transcribe.service';
+import { TranscribeController } from './controllers/transcribe.controller';
+import { TranscribeService } from './services/transcribe.service';
 
 @Module({
   imports: [

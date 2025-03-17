@@ -3,17 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import {
   TranscribeOptionsDto,
   UploadResponseDto,
-} from './dto/request/transcribe.dto';
-import { TranscriptionResponseDto } from './dto/response/transcription-response.dto';
+} from '../dto/request/transcribe.dto';
+import { TranscriptionResponseDto } from '../dto/response/transcription-response.dto';
 import axios from 'axios';
 import { FastifyRequest } from 'fastify';
-
-interface AudioFile {
-  buffer: Buffer;
-  mimetype: string;
-  originalname: string;
-  size: number;
-}
+import { AudioFile } from '../interfaces/transcribe.interface';
 
 @Injectable()
 export class TranscribeService {

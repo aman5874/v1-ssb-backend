@@ -17,18 +17,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { FastifyRequest } from 'fastify';
-import { Role } from '@prisma/client';
-import { RegisterResponse, LoginResponse } from './interfaces/user.interface';
+import { RegisterResponse, LoginResponse, RequestWithUser } from './interfaces/user.interface';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-
-interface RequestWithUser extends FastifyRequest {
-  user: {
-    userId: number;
-    role: Role;
-  };
-}
 
 @Controller('user') // handles requests to /users
 export class UsersController {

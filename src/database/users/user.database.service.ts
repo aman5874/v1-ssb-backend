@@ -6,7 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { PrismaClient, Prisma, Role } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { withOptimize } from '@prisma/extension-optimize';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { withPulse } from '@prisma/extension-pulse';
@@ -14,7 +14,9 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { Cache } from 'cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserData } from '../interfaces/database.interface';
 
+// QueryEvent type definition
 type QueryEvent = {
   timestamp: Date;
   query: string;
@@ -23,13 +25,6 @@ type QueryEvent = {
   target: string;
 };
 
-interface UserData {
-  email: string;
-  name: string;
-  password: string;
-  role?: Role;
-}
-
 @Injectable()
 export class DatabaseService
   extends PrismaClient
@@ -37,6 +32,7 @@ export class DatabaseService
 {
   private readonly logger = new Logger(DatabaseService.name);
   private isConnected = false;
+
 
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
@@ -74,6 +70,7 @@ export class DatabaseService
     });
   }
 
+  // Connect to the database
   async onModuleInit() {
     if (!this.isConnected) {
       await this.$connect();
@@ -134,6 +131,7 @@ export class DatabaseService
     await this.$disconnect();
   }
 
+  // Ensure admin user exists
   async ensureAdminExists() {
     const adminExists = await this.user.findUnique({
       where: { email: 'admin@example.com' },
@@ -153,6 +151,7 @@ export class DatabaseService
     return adminExists;
   }
 
+  // Ensure test user exists
   async ensureTestUserExists() {
     const userExists = await this.user.findUnique({
       where: { email: 'user@example.com' },

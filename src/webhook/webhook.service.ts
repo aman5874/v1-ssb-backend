@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { TranscribeService } from '../transcribe/transcribe.service';
+import { TranscribeService } from '../transcription/services/transcribe.service';
 
 @Injectable()
 export class WebhookService {

@@ -15,26 +15,8 @@ import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { Role } from '@prisma/client';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-
-interface UserResponse {
-  userId: string;
-  email: string;
-  name: string;
-  role: Role;
-}
-
-interface UserType extends UserResponse {
-  id: number;
-  password: string;
-  loginAt?: Date;
-}
-
-interface LoginResponse {
-  user: UserResponse & { loginAt?: Date };
-  token: string;
-}
+import { UserResponse, UserType, LoginResponse } from './interfaces/user.interface';
 
 @Injectable()
 export class UsersService {

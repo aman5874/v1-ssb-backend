@@ -8,7 +8,7 @@ import { ApiModule } from './api/api.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 import { MulterModule } from '@nestjs/platform-express';
-import { TranscribeModule } from './transcribe/transcribe.module';
+import { TranscribeModule } from './transcription/transcribe.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { RedisCacheModule } from './cache/cache.module';

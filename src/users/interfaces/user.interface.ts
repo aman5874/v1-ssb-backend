@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client';
+import { FastifyRequest } from 'fastify';
 
 export interface UserResponse {
   userId: string;
@@ -7,12 +8,25 @@ export interface UserResponse {
   role: Role;
 }
 
-export interface LoginResponse{
-    user: UserResponse;
-    token: string;
-}
-
 export interface RegisterResponse {
   user: UserResponse;
   token: string;
+}
+
+export interface UserType extends UserResponse {
+  id: number;
+  password: string;
+  loginAt?: Date;
+}
+
+export interface LoginResponse {
+  user: UserResponse & { loginAt?: Date };
+  token: string;
+}
+
+export interface RequestWithUser extends FastifyRequest {
+  user: {
+    userId: number;
+    role: Role;
+  };
 }
