@@ -1,4 +1,4 @@
-# Speech-to-Text Transcription Service
+# Meeting Summarization
 
 ## Overview
 
